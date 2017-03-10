@@ -5,11 +5,11 @@ var fs = require('fs');
 var clipperz = 'https://clipperz.is/app/';
 var casper = require('casper').create({
   verbose: true,
-  logLevel: 'debug'
+  logLevel: 'debug',
+  viewportSize: {width: 1280, height: 800}
 });
 
 casper.start(clipperz, function () {
-    console.log(fs.workingDirectory);
     this.waitForSelector('div#loginPage form');
 });
 
@@ -20,25 +20,43 @@ casper.then(function () {
         'input[name="passphrase"]':    'st0ckt@k3'
     }, true);
     this.echo('form submitted!');
-});
-
-var injectJQuery = function () {
-    this.captureSelector('capture.png', 'body');
-    this.echo(this.getElementsInfo('.tagList'));
-
-    var count = this.evaluate(function () {
-        
-        return this.getElementsInfo('.tagList');
-    });
-
-    console.log('matches', count);  
     
-};
+});
 
 casper.then(function () {
     this.echo('waiting til visible...');
-    this.waitUntilVisible('cardListColumn', injectJQuery, null, 600000);
+    this.waitUntilVisible('li[data-tag="photography"]', null, null, 30000);
 });
+
+var websites;
+
+casper.thenClick('li[data-tag="photography"]',function () {
+    this.echo('clicking photography...');
+
+    matches = this.evaluate(function() {
+        var links = document.querySelectorAll('div.cardListInnerWrapper > ul > li');
+        return Array.prototype.map.call(links, function (e) {
+            return e.getAttribute('data-label')
+        });
+        
+    });
+
+});
+
+
+casper.then(function () {
+    this.echo('processing links...');
+
+    casper.each(websites, function (self, link) {
+        self.click('li[data-label="' + link + '"]');
+    });
+}).then(function () {
+    this.waitUntilVisible('div.cardFields', function () {
+        this.capture('load.png');
+    }
+    , null, 30000);
+});
+
 
 casper.run(function () {
     casper.done();
