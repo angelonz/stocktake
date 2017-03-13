@@ -33,7 +33,7 @@ var websites;
 casper.thenClick('li[data-tag="photography"]',function () {
     this.echo('clicking photography...');
 
-    matches = this.evaluate(function() {
+    websites = this.evaluate(function() {
         var links = document.querySelectorAll('div.cardListInnerWrapper > ul > li');
         return Array.prototype.map.call(links, function (e) {
             return e.getAttribute('data-label')
