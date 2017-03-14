@@ -8,4 +8,6 @@ var config = {
 	},
 	balance: '#ftl-header-member-nb-credits'
 	
-}
+};
+
+module.exports = config;
