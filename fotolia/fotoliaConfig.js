@@ -2,7 +2,7 @@ var config = {
 	login: {
 		url: 'https://www.fotolia.com/Member/Login',
 		username: 'input#login',
-		passowrd: 'input#password',
+		password: 'input#password',
 		form: 'form.form-large',
 		submit: '#signin_submit'		
 	},
