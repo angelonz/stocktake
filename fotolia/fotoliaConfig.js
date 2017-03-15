@@ -4,9 +4,15 @@ var config = {
 		username: 'input#login',
 		password: 'input#password',
 		form: 'form.form-large',
-		submit: '#signin_submit'		
+		submit: 'form.form-large #signin_submit',
+		modal: 'a.ftl-modal-close'		
 	},
-	balance: '#ftl-header-member-nb-credits'
+	balance: '#ftl-header-member-nb-credits',
+	blacklist: [
+	    'fls.doubleclick.net',
+    	'ssl.google-analytics.com',
+    	'bid.g.doubleclick.net'
+	]
 	
 };
 
