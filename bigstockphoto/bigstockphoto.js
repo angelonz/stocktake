@@ -1,4 +1,4 @@
-var config = require('./fotoliaConfig');
+var config = require('./bigstockConfig');
 var casperOptions = require('../casperConfig');
 
 phantom.casperPath = 'node_modules/casperjs';
@@ -19,32 +19,32 @@ casper.on('resource.requested', function(requestData, request) {
   }
 });
 
-
 casper.start(config.login.url, function () {
-    if (this.exists(config.login.modal)) {
-        this.echo('welcome modal shown');
-        this.click(config.login.modal);
+    if (this.exists(config.login.username)) {
+        this.echo('login form loaded');
     }
 });
 
 casper.then(function () {
     
     this.echo('filling form...');
+    //__util__.setFieldValue()
     this.fillSelectors(config.login.form, {
-        'input#login' :    'angelonz',
-        'input#password' :    'lonewolf'
-    }, false);
-    this.click(config.login.submit);
+        'input#uname' :    'angelonz',
+        'input#passwd' :    'lonewolf'
+    }, true);
     this.echo('form submitted!');
     
 });
 
 casper.waitFor(function check() {
+    return this.exists(config.balance);
+    /**
     return this.evaluate(function() {
-        return document.querySelectorAll('div.row-member-summary').length > 0;
+        return document.querySelectorAll(config.balance).length > 0;
     });
+*/
 }, function then() {
-    
     this.echo(this.fetchText(config.balance));
     
 });
