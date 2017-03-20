@@ -11,11 +11,10 @@ page.open(clipperz, function(status) {
   		
   		var obj = page.evaluate(function () {
 			var form = $('div#loginPage form'); 
-			
-  			return {
-				  name: form.find('input[name="name"]').attr('placeholder')
-				 //pass: $(form).find('input[name="passphrase"]')
-			};
+			form.find('input[name="name"]').val('angelonz');
+			form.find('input[name="passphrase"]').val('st0ckt@k3');
+			form.find('button[type="submit"]').click();
+  			
 			  
   		});
 

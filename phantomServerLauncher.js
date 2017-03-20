@@ -10,7 +10,8 @@ phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
 var casper = require('casper').create(casperOptions);
 
 server.listen(ipAndPort, function(request, response) {
-    var balance = 'init';
+    
+    
     
     if (request.url.indexOf('/fotolia') === 0) {
         console.log('servicing fotolia request...');    
@@ -23,6 +24,7 @@ server.listen(ipAndPort, function(request, response) {
                 this.click(config.login.modal);
             }
         });
+
 
         casper.then(function () {
             
@@ -45,12 +47,13 @@ server.listen(ipAndPort, function(request, response) {
             this.echo(this.fetchText(config.balance));
             
         });
+        
 
 
         casper.run(function () {
             response.statusCode = 200;
             var body = JSON.stringify({
-                balance: this.fetchText(config.balance);
+                balance: this.fetchText(config.balance)
             })
 
             response.write(body);
@@ -60,5 +63,6 @@ server.listen(ipAndPort, function(request, response) {
 
         
     }
+    
 
 });

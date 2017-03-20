@@ -1,10 +1,10 @@
 var exec = require('child_process'),
     path = require('path');
 
-var phantomjs = path.resolve(__dirname, 'bin/mac');
+var phantomjs = path.resolve(__dirname, 'bin/windows');
 //var casperjs = path.resolve(__dirname, 'bins', 'casperjs', 'bin');
 
-process.env.PATH = process.env.PATH + ':' + phantomjs;
+process.env.PATH = process.env.PATH + ';' + phantomjs;
 
 // Now launch a casperjs script and get result.
 var p = exec.spawn('phantomjs', ['phantomServerLauncher.js']);
