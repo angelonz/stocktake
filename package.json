@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "casperjs": "^1.1.3",
-    "crypto-js": "^3.1.9-1"
+    "crypto-js": "^3.1.9-1",
+    "phantomjs-pool": "^0.3.1"
   }
 }

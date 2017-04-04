@@ -1,5 +1,5 @@
-phantom.casperPath = 'node_modules/casperjs';
-phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
+//phantom.casperPath = 'node_modules/casperjs';
+//phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
 
 var fs = require('fs');
 var clipperz = 'https://clipperz.is/app/';
