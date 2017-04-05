@@ -1,7 +1,7 @@
 var config = require('./bigstockConfig');
 
 module.exports = {
-  getBSPBalance: function (casper, response) {
+  getBSPBalance: function (casper, done) {
       casper.on('resource.requested', function(requestData, request) {
         // List of URLs to skip. Entering part of a hostname or path is OK.
         var blackList = config.blacklist;
@@ -35,26 +35,19 @@ module.exports = {
 
       casper.waitFor(function check() {
           return this.exists(config.balance);
-          /**
-          return this.evaluate(function() {
-              return document.querySelectorAll(config.balance).length > 0;
-          });
-      */
+          
       }, function then() {
-          this.echo(this.fetchText(config.balance));
+          //this.echo(this.fetchText(config.balance));
           
       });
 
 
       casper.run(function () {
-          response.statusCode = 200;
-          var body = JSON.stringify({
-              balance: this.fetchText(config.balance)
-          })
-
-          response.write(body);
-          response.close();
-          //casper.done();
+          var body = {
+            balance: this.fetchText(config.balance)
+        };
+        //casper.done();
+        done(null, body);
       });
   }
 }
