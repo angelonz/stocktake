@@ -18,4 +18,9 @@ module.exports = function(data, done, worker) {
         bsp.getBSPBalance(casper, done);
     }
 
+    if (data === 'dreamstime') {
+        var dt = require('./dreamstime/dreamstime');
+        dt.getDTBalance(casper, done);
+    }
+
 };

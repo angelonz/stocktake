@@ -7,7 +7,7 @@ var config = {
 		submit: '',
         loginToggle: 'a.signinlbl'
 	},
-	balance: 'a[href="https://www.dreamstime.com/earnings"]',
+	balance: 'div.dt-logout-popup a[href="https://www.dreamstime.com/earnings"]',
 	blacklist: [
     	'www.google-analytics.com',
         'www.googleadservices.com',
