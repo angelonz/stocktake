@@ -2,21 +2,13 @@ var Pool = require('phantomjs-pool').Pool;
 
 function jobCallback(job, worker, index) {
 
-    /** 
-    if (index < 10) { // we just use the index as our data
-        job(index, function(err) {
-            console.log('DONE: ' + index);
+    if (index < 1) { // we just use the index as our data
+        job(index, function(err, data) {
+            console.log('DONE: ' + data.balance);
         });
     } else { // no more jobs
         job(null);
     }
-    */
-
-    job(index, function(err) {
-        console.log('DONE: ' + index);
-    });
-
-    job(null);
 
 }
 

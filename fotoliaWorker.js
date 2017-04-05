@@ -1,14 +1,27 @@
 var casperOptions = require('./casperConfig');
 var config = require('./fotolia/fotoliaConfig');
 
-phantom.casperPath = '/d/dev/sandbox/stocktake/node_modules/casperjs';
+phantom.casperPath = 'D:\\dev\\sandbox\\stocktake\\node_modules\\casperjs';
 phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
 
-var casper = require('casper').create(casperOptions);
-
-var webpage = require('webpage');
+var casper = require('./node_modules/casperjs/modules/casper').create(casperOptions);
 
 module.exports = function(data, done, worker) {
+
+    casper.on('resource.requested', function(requestData, request) {
+        // List of URLs to skip. Entering part of a hostname or path is OK.
+        var blackList = config.blacklist;
+        var blackListLength = blackList.length;
+        // If a match is found, abort the request.
+        for (var i = 0; i < blackListLength; i++) {
+            if (requestData.url.indexOf(blackList[i]) > -1) {
+            casper.log('Skipped: ' + requestData.url, 'info');
+            request.abort();
+            }
+        }
+    });
+
+
     casper.start(config.login.url, function () {
         if (this.exists(config.login.modal)) {
             this.echo('welcome modal shown');
@@ -35,15 +48,18 @@ module.exports = function(data, done, worker) {
         });
     }, function then() {
         
-        this.echo(this.fetchText(config.balance));
+        //this.echo(this.fetchText(config.balance));
         
     });
     
 
 
     casper.run(function () {
-        casper.done();
-        done(null);
+        var body = {
+            balance: this.fetchText(config.balance)
+        };
+        //casper.done();
+        done(null, body);
     });
 
 };
