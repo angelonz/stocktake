@@ -12,7 +12,8 @@ var config = {
     	'www.google-analytics.com',
         'www.googleadservices.com',
         'https://googleads.g.doubleclick.net',
-        'https://staticxx.facebook.com'
+        'https://staticxx.facebook.com',
+		'www.facebook.com'
 	]
 	
 };

@@ -1,4 +1,5 @@
 var Pool = require('phantomjs-pool').Pool;
+var os = process.argv.slice(2)[0];
 
 function jobCallback(job, worker, index) {
 
@@ -23,7 +24,7 @@ var pool = new Pool({
     numWorkers : 3,
     jobCallback : jobCallback,
     workerFile : __dirname + '/stocktakeWorker.js', // location of our worker file (as an absolute path)
-    phantomjsBinary: __dirname + '/bin/mac/phantomjs',
+    phantomjsBinary: __dirname + '/bin/' + os + '/phantomjs',
     spawnWorkerDelay: 100,
     verbose: true
 });
