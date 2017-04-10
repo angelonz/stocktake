@@ -10,7 +10,8 @@ const chalk = require('chalk');
 const errorHandler = require('errorhandler');
 const expressStatusMonitor = require('express-status-monitor');
 const lusca = require('lusca');
-const stockTake = require('./stocktakeMaster');
+//const stockTake = require('./stocktakeMaster');
+const StockTake = require('./stocktakeMaster2');
 
 const app = express();
 
@@ -43,14 +44,12 @@ app.use(lusca.xssProtection(true));
  */
 app.get('/api/balances', (request, response, next) => {
 
-    console.log('starting pool...');
-  
-    stockTake.pool.start();
+    const stockTake = new StockTake();
+    stockTake.getPool().start();
     stockTake.getBalances()
         .then((balances) => {
-            console.log('Promise resolved.')
             //response.writeHead(200, { "Content-Type": "application/json" });
-            response.set('Content-Type','appliation/json');
+            //response.set('Content-Type','appliation/json');
             response.send(balances);
         }).catch((reason) => {
             console.log(reason);

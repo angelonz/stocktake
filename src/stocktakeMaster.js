@@ -6,7 +6,7 @@ const events = require('events');
 const emitter = new events.EventEmitter();
 
 // FIX this
-const os = 'mac';
+const os = 'windows';
 
 // this object will contain all the balances
 let sites,

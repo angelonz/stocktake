@@ -13,7 +13,8 @@ var config = {
         'www.googleadservices.com',
         'https://googleads.g.doubleclick.net',
         'https://staticxx.facebook.com',
-		'www.facebook.com'
+		'www.facebook.com',
+		'https://platform.twitter.com'
 	]
 	
 };
