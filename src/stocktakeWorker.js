@@ -9,17 +9,22 @@ module.exports = function(data, done, worker) {
 
     if (data === 'fotolia') {
         var fotolia = require('../fotolia/fotolia');
-        fotolia.getFotoliaBalance(casper, done);
+        fotolia.getBalance(casper, done);
     }
 
     if (data === 'bigstockphoto') {
         var bsp = require('../bigstockphoto/bigstockphoto');
-        bsp.getBSPBalance(casper, done);
+        bsp.getBalance(casper, done);
     }
 
     if (data === 'dreamstime') {
         var dt = require('../dreamstime/dreamstime');
-        dt.getDTBalance(casper, done);
+        dt.getBalance(casper, done);
+    }
+
+    if (data === 'gettyimages') {
+        var dt = require('../gettyimages/getty');
+        dt.getBalance(casper, done);
     }
 
 };

@@ -17,9 +17,8 @@ module.exports = {
             });
 
             casper.start(config.login.url, function () {
-                if (this.exists(config.login.loginToggle)) {
-                    this.echo('*** landing page loaded ***');
-                    this.click(config.login.loginToggle);
+                if (this.exists(config.login.form)) {
+                    this.echo('*** landing page loaded ***'); 
                     
                 }
             });
@@ -29,21 +28,27 @@ module.exports = {
                 this.echo('filling form...');
                 //__util__.setFieldValue()
                 this.fillSelectors(config.login.form, {
-                    'input#inp_user' :    'angelonz',
-                    'input#inp_pass' :    'lonewolf'
-                }, true);
+                    'input#new_session_username' :    'a_m_angeles@yahoo.com',
+                    'input#new_session_password' :    'l0n3w0lf'
+                }, false);
+                this.click(config.login.submit);
                 this.echo('form submitted!');
                                 
             });
 
-            casper.waitFor(function check() {
-                return this.exists(config.balance);
-                
-            }, function then() {
-                //this.echo(this.fetchText(config.balance));
-                
+            casper.open('https://accountmanagement.gettyimages.com/Reports/Statement', function () {
+                this.capture('getty.png');
             });
 
+            /*
+            casper.waitFor(function check() {
+                
+                return this.exists(config.balance);
+                
+            }, function then() {          
+                //this.click(config.link1);
+            });
+            */
 
             casper.run(function () {    
                 var body = {

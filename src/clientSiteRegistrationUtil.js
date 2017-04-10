@@ -1,3 +1,4 @@
 module.exports = {
-    getRegisteredSites: () =>  ['dreamstime','fotolia','bigstockphoto']
+    //getRegisteredSites: () =>  ['dreamstime','fotolia','bigstockphoto','gettyimages']
+    getRegisteredSites: () =>  ['gettyimages']
 }

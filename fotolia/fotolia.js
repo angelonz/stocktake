@@ -2,7 +2,7 @@ var config = require('./fotoliaConfig');
 
 module.exports = {
 
-  getFotoliaBalance: function (casper, done) {
+  getBalance: function (casper, done) {
 
     casper.on('resource.requested', function(requestData, request) {
         // List of URLs to skip. Entering part of a hostname or path is OK.

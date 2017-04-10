@@ -49,7 +49,7 @@ const jobCallback = (job, worker, index) => {
 }
 
 const pool = new Pool({
-    numWorkers : 3,
+    numWorkers : 1,
     jobCallback : jobCallback,
     workerFile : __dirname + '/stocktakeWorker.js', // location of our worker file (as an absolute path)
     // phantomjsBinary: __dirname + '../../bin/' + os + '/phantomjs',

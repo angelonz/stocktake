@@ -4,7 +4,7 @@ const siteRegistrationUtil = require('./clientSiteRegistrationUtil');
 const events = require('events');
 
 // FIX this
-const os = 'windows';
+const os = 'mac';
 
 function Stocktake() {
 
@@ -42,7 +42,7 @@ function Stocktake() {
     };
 
     this.pool = new Pool({
-        numWorkers : 3,
+        numWorkers : 4,
         jobCallback : jobCallback,
         workerFile : __dirname + '/stocktakeWorker.js', // location of our worker file (as an absolute path)
         // phantomjsBinary: __dirname + '../../bin/' + os + '/phantomjs',
