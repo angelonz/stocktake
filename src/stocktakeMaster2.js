@@ -3,9 +3,6 @@ const _ = require('lodash');
 const siteRegistrationUtil = require('./clientSiteRegistrationUtil');
 const events = require('events');
 
-// FIX this
-const os = 'mac';
-
 function Stocktake() {
 
     this.emitter = new events.EventEmitter();
@@ -14,9 +11,7 @@ function Stocktake() {
     var that = this;
 
     const jobCallback = (job, worker, index) => {
-
-        this.sites = siteRegistrationUtil.getRegisteredSites();
-        
+                
         if (index < this.sites.length) { 
 
             // TODO: figure out a way to base this on the sites that a client has registered for
@@ -41,12 +36,13 @@ function Stocktake() {
 
     };
 
+    this.sites = siteRegistrationUtil.getRegisteredSites();
+
     this.pool = new Pool({
-        numWorkers : 4,
+        numWorkers : this.sites.length,
         jobCallback : jobCallback,
         workerFile : __dirname + '/stocktakeWorker.js', // location of our worker file (as an absolute path)
-        // phantomjsBinary: __dirname + '../../bin/' + os + '/phantomjs',
-        phantomjsBinary: __dirname + '/../bin/' + os + '/phantomjs',
+        phantomjsBinary: __dirname + '/../bin/' + process.env.BIN + '/phantomjs',
         spawnWorkerDelay: 100,
         verbose: true,
         workerTimeout: 180000

@@ -11,10 +11,8 @@ var config = {
 	blacklist: [
     	'www.google-analytics.com',
         'www.googleadservices.com',
-        'https://googleads.g.doubleclick.net'
-        
-	]
-	
+        'https://googleads.g.doubleclick.net'        
+	]	
 };
 
 module.exports = config;

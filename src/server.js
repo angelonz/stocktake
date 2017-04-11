@@ -15,6 +15,8 @@ const StockTake = require('./stocktakeMaster2');
 
 const app = express();
 
+require('dotenv').load();
+
 app.set('port', process.env.PORT || 3000);
 app.use(expressStatusMonitor());
 app.use(compression());
