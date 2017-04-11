@@ -59,6 +59,21 @@ app.get('/api/balances', (request, response, next) => {
     
 });
 
+app.get('/api/:site', (request, response, next) => {
+
+    const stockTake = new StockTake(request.params.site);
+    stockTake.getPool().start();
+    stockTake.getBalances()
+        .then((balances) => {
+            //response.writeHead(200, { "Content-Type": "application/json" });
+            //response.set('Content-Type','appliation/json');
+            response.send(balances);
+        }).catch((reason) => {
+            console.log(reason);
+        });
+    
+});
+
 /**
  * Start Express server.
  */

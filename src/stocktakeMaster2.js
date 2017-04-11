@@ -3,7 +3,7 @@ const _ = require('lodash');
 const siteRegistrationUtil = require('./clientSiteRegistrationUtil');
 const events = require('events');
 
-function Stocktake() {
+function Stocktake(site) {
 
     this.emitter = new events.EventEmitter();
     this.result = {};
@@ -36,10 +36,11 @@ function Stocktake() {
 
     };
 
-    this.sites = siteRegistrationUtil.getRegisteredSites();
+    //this.sites = siteRegistrationUtil.getRegisteredSites();
+    this.sites = [site];
 
     this.pool = new Pool({
-        numWorkers : this.sites.length,
+        numWorkers : this.sites.length,        
         jobCallback : jobCallback,
         workerFile : __dirname + '/stocktakeWorker.js', // location of our worker file (as an absolute path)
         phantomjsBinary: __dirname + '/../bin/' + process.env.BIN + '/phantomjs',
