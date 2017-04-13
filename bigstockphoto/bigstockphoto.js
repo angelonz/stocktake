@@ -18,6 +18,7 @@ module.exports = {
       casper.start(config.login.url, function () {
           if (this.exists(config.login.username)) {
               this.echo('login form loaded');
+              
           }
       });
 
@@ -30,15 +31,15 @@ module.exports = {
               'input#passwd' :    'lonewolf'
           }, true);
           this.echo('form submitted!');
-          
       });
 
       casper.waitFor(function check() {
           return this.exists(config.balance);
           
       }, function then() {
-          //this.echo(this.fetchText(config.balance));
-          
+          //this.echo(this.fetchText(config.balance));          
+      }, function timeout() {
+          // what do we do on a timeout?
       });
 
 

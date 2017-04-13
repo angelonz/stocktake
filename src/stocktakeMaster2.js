@@ -13,25 +13,32 @@ function Stocktake(site) {
     const jobCallback = (job, worker, index) => {
                 
         if (index < this.sites.length) { 
-
-            // TODO: figure out a way to base this on the sites that a client has registered for
-            
+                        
             let siteName = this.sites[index];
 
             job(siteName, (err, data) => {
                 
-                if (data && _.isNull(err)) {
+                if (_.isNull(err) && data) {
                     console.log('DONE: ' + siteName + ':' + data.balance);
-                    that.result[siteName] = data.balance;
-                } else {
-                    // what do we do?
-                }
+
+                    //let value = data.balance;
+                    let balance = data.balance;
+
+                    // we could not fetch the balance
+                    if (_.isNil(balance) || (balance.length === 0)) {
+                        balance = '-';
+                    } 
+                    
+                    that.result[siteName] = balance;
+                    // we can fire this here since we're only dealing with one site at a time
+                    this.emitter.emit('jobsComplete');
+                } 
                 
             });
                     
         } else { // no more jobs
             job(null);
-            this.emitter.emit('jobsComplete');
+            
         }
 
     };
@@ -46,7 +53,7 @@ function Stocktake(site) {
         phantomjsBinary: __dirname + '/../bin/' + process.env.BIN + '/phantomjs',
         spawnWorkerDelay: 100,
         verbose: true,
-        workerTimeout: 180000
+        workerTimeout: 30000
     });
 
 }    
@@ -54,7 +61,6 @@ function Stocktake(site) {
 Stocktake.prototype.allJobsFinished = function() {
     // checks if all sites have been processed by comparing the lengths of the sites array with the 
     // result object
-    console.log('sites',this.sites);
     console.log('result', this.result);
     return this.sites.length === _.keys(this.result).length;
 };
@@ -71,7 +77,11 @@ Stocktake.prototype.getBalances = function() {
             if (this.allJobsFinished()) {
                 console.log('*** promise resolved *****');
                 resolve(this.result);
-            }   
+            } else {
+                reject({
+                    error: 'error fetching balance'
+                });
+            }
         });
         
 

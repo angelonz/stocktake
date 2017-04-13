@@ -6,14 +6,18 @@ var config = {
 		form: 'form[action="https://www.bigstockphoto.com/login"]',
 		submit: '',
 	},
-	balance: 'li.dropdown.account > a > span',
+	balance: 'li.dropdown.account > a > span',	
 	blacklist: [
 	    'analytics.twitter.com',
     	'ssl.google-analytics.com',
     	'www.google-analytics.com',
-    	'www.facebook.com'
-
+    	'https://insight.adsrvr.org',
+		'www.google.com',
+		'https://www.gstatic.com',
+		'https://stats.g.doubleclick.net',
+		'https://assets.customer.io'
 	]
+	
 	
 };
 

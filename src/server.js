@@ -10,8 +10,13 @@ const chalk = require('chalk');
 const errorHandler = require('errorhandler');
 const expressStatusMonitor = require('express-status-monitor');
 const lusca = require('lusca');
+const _ = require('lodash');
+
 //const stockTake = require('./stocktakeMaster');
 const StockTake = require('./stocktakeMaster2');
+
+const NOT_FOUND = 404;
+const OK = 200;
 
 const app = express();
 
@@ -59,14 +64,21 @@ app.get('/api/balances', (request, response, next) => {
     
 });
 
+/**
+ * Route to handle individual site requests
+ */
 app.get('/api/:site', (request, response, next) => {
 
     const stockTake = new StockTake(request.params.site);
     stockTake.getPool().start();
     stockTake.getBalances()
         .then((balances) => {
-            //response.writeHead(200, { "Content-Type": "application/json" });
-            //response.set('Content-Type','appliation/json');
+            
+            console.log('balances', balances);
+            if (_.isEmpty(balances) || balances[request.params.site] === '-') {
+              response.status(NOT_FOUND);
+            }
+
             response.send(balances);
         }).catch((reason) => {
             console.log(reason);
