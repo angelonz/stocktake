@@ -8,22 +8,22 @@ var casper = require('../node_modules/casperjs/modules/casper').create(casperOpt
 module.exports = function(data, done, worker) {
 
     if (data === 'fotolia') {
-        var fotolia = require('../fotolia/fotolia');
+        var fotolia = require('../sites/fotolia/fotolia');
         fotolia.getBalance(casper, done);
     }
 
     if (data === 'bigstockphoto') {
-        var bsp = require('../bigstockphoto/bigstockphoto');
+        var bsp = require('../sites/bigstockphoto/bigstockphoto');
         bsp.getBalance(casper, done);
     }
 
     if (data === 'dreamstime') {
-        var dt = require('../dreamstime/dreamstime');
+        var dt = require('../sites/dreamstime/dreamstime');
         dt.getBalance(casper, done);
     }
 
     if (data === 'gettyimages') {
-        var dt = require('../gettyimages/getty');
+        var dt = require('../sites/gettyimages/getty');
         dt.getBalance(casper, done);
     }
 
