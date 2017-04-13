@@ -1,4 +1,4 @@
-var config = require('./fotoliaConfig');
+var config = require('./config');
 
 module.exports = {
 
@@ -29,10 +29,13 @@ module.exports = {
     casper.then(function () {
         
         this.echo('filling form...');
-        this.fillSelectors(config.login.form, {
-            'input#login' :    'angelonz',
-            'input#password' :    'lonewolf'
-        }, false);
+
+        var options = {};
+        options[config.login.username] = 'angelonz';
+        options[config.login.password] = 'lonewolf';
+        
+        this.fillSelectors(config.login.form, options, false);
+
         this.click(config.login.submit);
         this.echo('form submitted!');
         

@@ -31,11 +31,13 @@ module.exports = {
         casper.then(function () {
             
             this.echo('filling form...');
-            //__util__.setFieldValue()
-            this.fillSelectors(config.login.form, {
-                'input#new_session_username' :    'a_m_angeles@yahoo.com',
-                'input#new_session_password' :    'l0n3w0lf'
-            }, false);
+            
+            var options = {};
+            options[config.login.username] = 'a_m_angeles@yahoo.com';
+            options[config.login.password] = 'l0n3w0lf';
+            
+            this.fillSelectors(config.login.form, options, false);
+
             this.click(config.login.submit);
             this.echo('form submitted!');
                             

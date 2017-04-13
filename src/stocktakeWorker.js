@@ -27,4 +27,9 @@ module.exports = function(data, done, worker) {
         dt.getBalance(casper, done);
     }
 
+    if (data === 'snapwire') {
+        var dt = require('../sites/snapwire/snapwire');
+        dt.getBalance(casper, done);
+    }
+
 };
