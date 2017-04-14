@@ -1,0 +1,7 @@
+- create express session 
+    https://codeforgeek.com/2015/07/using-redis-to-handle-session-in-node-js/
+
+- send email verification link
+    https://codeforgeek.com/2016/06/node-js-redis-tutorial-building-email-verification-system/
+
+- redis for persistence?
