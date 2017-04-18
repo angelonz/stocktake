@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const express = require('express');
 
@@ -12,11 +12,11 @@ const expressStatusMonitor = require('express-status-monitor');
 const lusca = require('lusca');
 const _ = require('lodash');
 
-//const stockTake = require('./stocktakeMaster');
-const StockTake = require('./stocktakeMaster2');
-
-const NOT_FOUND = 404;
-const OK = 200;
+/**
+ * Controllers
+ */
+const siteController = require('./controllers/site');
+const userController = require('./controllers/user');
 
 const app = express();
 
@@ -47,44 +47,12 @@ app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 
 /**
- * routes
- */
-app.get('/api/balances', (request, response, next) => {
-
-    const stockTake = new StockTake();
-    stockTake.getPool().start();
-    stockTake.getBalances()
-        .then((balances) => {
-            //response.writeHead(200, { "Content-Type": "application/json" });
-            //response.set('Content-Type','appliation/json');
-            response.send(balances);
-        }).catch((reason) => {
-            console.log(reason);
-        });
-    
-});
-
-/**
  * Route to handle individual site requests
  */
-app.get('/api/:site', (request, response, next) => {
+app.get('/api/:site', siteController.getBalances);
 
-    const stockTake = new StockTake(request.params.site);
-    stockTake.getPool().start();
-    stockTake.getBalances()
-        .then((balances) => {
-            
-            console.log('balances', balances);
-            if (_.isEmpty(balances) || balances[request.params.site] === '-') {
-              response.status(NOT_FOUND);
-            }
+app.post('/register', userController.register);
 
-            response.send(balances);
-        }).catch((reason) => {
-            console.log(reason);
-        });
-    
-});
 
 /**
  * Start Express server.

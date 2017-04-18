@@ -21,6 +21,8 @@
     "express": "^4.15.2",
     "express-session": "^1.15.2",
     "express-status-monitor": "^0.1.9",
+    "http-status-codes": "^1.1.6",
+    "ioredis": "^2.5.0",
     "lodash": "^4.17.4",
     "lusca": "^1.4.1",
     "morgan": "^1.8.1",
