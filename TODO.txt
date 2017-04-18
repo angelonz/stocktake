@@ -5,3 +5,5 @@
     https://codeforgeek.com/2016/06/node-js-redis-tutorial-building-email-verification-system/
 
 - redis for persistence?
+
+- stop casper on login failure

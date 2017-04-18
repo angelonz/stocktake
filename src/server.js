@@ -17,6 +17,7 @@ const _ = require('lodash');
  */
 const siteController = require('./controllers/site');
 const userController = require('./controllers/user');
+const emailController = require('./controllers/email');
 
 const app = express();
 
@@ -51,7 +52,10 @@ app.use(lusca.xssProtection(true));
  */
 app.get('/api/:site', siteController.getBalances);
 
-app.post('/register', userController.register);
+/**
+ * Route for user registration
+ */
+app.post('/register', userController.register, emailController.sendVerificationEmail);
 
 
 /**
