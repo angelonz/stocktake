@@ -4,8 +4,6 @@ const HttpStatus = require('http-status-codes');
 const cryptoUtil = require('../util/cryptoUtil');
 const _ = require('lodash');
 
-const ALREADY_EXISTS = 1;
-
 function createUser({ email, password, secret }) {    
     // encrypt the password using the secret then save the json to redis
     return redisClient.hmset(email, 
