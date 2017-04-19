@@ -61,6 +61,11 @@ app.get('/api/:site', siteController.getBalances);
  */
 app.post('/register', userController.register, emailController.sendVerificationEmail);
 
+/**
+ * Route for email verification
+ */
+app.get('/verify', userController.verify);
+
 
 /**
  * Start Express server.

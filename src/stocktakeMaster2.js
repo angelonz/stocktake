@@ -1,11 +1,10 @@
 const Pool = require('phantomjs-pool').Pool;
 const _ = require('lodash');
 const siteRegistrationUtil = require('./clientSiteRegistrationUtil');
-const events = require('events');
+const emitter = require('./util/eventManager').getEmitter();
 
 function Stocktake(site) {
 
-    this.emitter = new events.EventEmitter();
     this.result = {};
 
     var that = this;
@@ -31,7 +30,7 @@ function Stocktake(site) {
                     
                     that.result[siteName] = balance;
                     // we can fire this here since we're only dealing with one site at a time
-                    this.emitter.emit('jobsComplete');
+                    emitter.emit('jobsComplete');
                 } 
                 
             });
@@ -72,7 +71,7 @@ Stocktake.prototype.getPool = function() {
 Stocktake.prototype.getBalances = function() {
     return new Promise((resolve, reject) => {
         
-        this.emitter.on('jobsComplete', () => {
+        emitter.on('jobsComplete', () => {
             console.log('*** jobs completed *****');
             if (this.allJobsFinished()) {
                 console.log('*** promise resolved *****');
