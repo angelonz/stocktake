@@ -11,6 +11,10 @@ const errorHandler = require('errorhandler');
 const expressStatusMonitor = require('express-status-monitor');
 const lusca = require('lusca');
 const _ = require('lodash');
+const db = require('./util/db');
+
+// start the connection to redis
+db.connect();
 
 /**
  * Controllers

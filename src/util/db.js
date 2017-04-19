@@ -6,14 +6,19 @@ const config = {
   redis_server_password: process.env.REDIS_SERVER_PASSWORD || undefined
 };
 
-module.exports = {
+let redis;
 
-    createClient : () => {
+module.exports = {
+    
+    connect : () => {
         const options = {
             password: config.redis_server_password
         };
 
-        return new Redis(config.redis_server_port, config.redis_server_host, options);
+        redis = new Redis(config.redis_server_port, config.redis_server_host, options);
+    },
+    getClient: () => {
+        return redis;
     }
   
 };

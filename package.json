@@ -26,7 +26,10 @@
     "lodash": "^4.17.4",
     "lusca": "^1.4.1",
     "morgan": "^1.8.1",
-    "phantomjs-pool": "^0.3.1"
+    "nodemailer": "^4.0.1",
+    "nodemailer-smtp-transport": "^2.7.4",
+    "phantomjs-pool": "^0.3.1",
+    "uuid": "^3.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
