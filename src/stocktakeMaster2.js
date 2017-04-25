@@ -5,6 +5,7 @@ const emitter = require('./util/eventManager').getEmitter();
 
 function Stocktake(site) {
 
+    this.site = site;
     this.result = {};
 
     var that = this;
@@ -30,7 +31,8 @@ function Stocktake(site) {
                     
                     that.result[siteName] = balance;
                     // we can fire this here since we're only dealing with one site at a time
-                    emitter.emit('jobsComplete');
+                    // TODO - do we need to make this unique per user?
+                    emitter.emit(`${this.site}Complete`);
                 } 
                 
             });
@@ -71,8 +73,8 @@ Stocktake.prototype.getPool = function() {
 Stocktake.prototype.getBalances = function() {
     return new Promise((resolve, reject) => {
         
-        emitter.on('jobsComplete', () => {
-            console.log('*** jobs completed *****');
+        emitter.on(`${this.site}Complete`, () => {
+            console.log(`*** ${this.site} completed *****`);
             if (this.allJobsFinished()) {
                 console.log('*** promise resolved *****');
                 resolve(this.result);

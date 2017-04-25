@@ -48,8 +48,8 @@ app.use(session({
 }));
 */
 
-app.use(lusca.xframe('SAMEORIGIN'));
-app.use(lusca.xssProtection(true));
+//app.use(lusca.xframe('SAMEORIGIN'));
+//app.use(lusca.xssProtection(true));
 
 /**
  * Route to handle individual site requests
