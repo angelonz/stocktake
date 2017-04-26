@@ -19,20 +19,16 @@ module.exports = {
 
 
     casper.start(config.login.url, function () {
-        if (this.exists(config.login.link)) {
-              this.echo('landing page loaded');
-              this.capture('alamylanding.png');  
-              this.click(config.login.link);
-        }
+        this.echo('login page loaded');
     });
 
     casper.waitFor(function check() {
-          return this.exists('input#btnLogin');
+          return this.exists(config.login.submit);
           
       }, function then() {
-          this.capture('alamylogin2.png');        
+          //this.capture('./screens/login.png');        
       }, function timeout() {
-          this.capture('timeout.png');
+          this.capture('./screens/timeout.png');
       });
 
     casper.then(function () {
@@ -43,32 +39,23 @@ module.exports = {
         options[config.login.username] = 'a_m_angeles@yahoo.com';
         options[config.login.password] = '22bw00dr1dg3';
         
-        this.fillSelectors(config.login.form, options, true);
-
+        this.fillSelectors(config.login.form, options, false);
+        this.click(config.login.submit);
+        
         this.echo('form submitted!');
         
     });
 
-    casper.waitFor(function check() {
-          return this.exists(config.waitForElement);
-          
-      }, function then() {
-          casper.thenOpen(config.landingPage, function () {
-              this.capture('alamy.png');
-          });         
-      });
+    casper.waitForUrl(config.landingPage, function () {
+        this.echo('url changed to ' + config.landingPage);
+    });
 
     casper.waitFor(function check() {
-        
         return this.exists(config.balance);
     }, function then() {
-        
-        //this.echo(this.fetchText(config.balance));
-        
+        this.echo(this.fetchText(config.balance));
     });
     
-
-
     casper.run(function () {
         var body = {
             balance: this.fetchText(config.balance)

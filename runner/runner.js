@@ -33,7 +33,12 @@ $(function(){
         $.get('http://localhost:3000/api/123rf')
             .done(function (data) {
                 console.log('123rf', data);
-            });      
+            });   
+
+        $.get('http://localhost:3000/api/alamy')
+            .done(function (data) {
+                console.log('alamy', data);
+            });        
 
    });
 

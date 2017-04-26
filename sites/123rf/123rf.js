@@ -50,7 +50,7 @@ module.exports = {
           return this.exists(config.balance);
           
       }, function then() {
-          this.capture('123afterlogin.png');          
+          //this.capture('123afterlogin.png');          
       }, function timeout() {
           // what do we do on a timeout?
       });

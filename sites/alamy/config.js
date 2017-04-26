@@ -1,16 +1,15 @@
 var config = {
 	login: {
-		url: 'http://alamy.com',
+		url: 'https://secure.alamy.com/logon.aspx?returnurl=https%3A%2F%2Fsecure%2Ealamy%2Ecom%2Fmyalamy%2Easpx',
 		username: 'input#txtEmail',
 		password: 'input#txtPassword',
 		form: 'form#form1',
-		submit: '',
-		link: 'li#log-in'
+		submit: 'input#btnLogin'
 	},
-	waitForElement: 'li#my-alamy',
 	landingPage: 'https://secure.alamy.com/myalamy-aim.aspx',
-	balance: 'div.your-sales div#graph3 span.textsize18',	
+	balance: 'div#graph3 span.text-size18.blockfix.ellipsis',	
 	blacklist: [
+		
 	    'analytics.twitter.com',
     	'ssl.google-analytics.com',
     	'www.google-analytics.com',
@@ -21,7 +20,8 @@ var config = {
 		'https://stats.g.doubleclick.net',
 		'https://assets.customer.io',
 		'https://googleads.g.doubleclick.net',
-		'https://4645712.fls.doubleclick.net'
+		'https://4645712.fls.doubleclick.net',
+		'https://bid.g.doubleclick.net'
 	]
 	
 	
