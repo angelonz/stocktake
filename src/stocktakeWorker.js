@@ -32,4 +32,14 @@ module.exports = function(data, done, worker) {
         dt.getBalance(casper, done);
     }
 
+    if (data === '123rf') {
+        var dt = require('../sites/123rf/123rf');
+        dt.getBalance(casper, done);
+    }
+
+    if (data === 'alamy') {
+        var dt = require('../sites/alamy/alamy');
+        dt.getBalance(casper, done);
+    }
+
 };

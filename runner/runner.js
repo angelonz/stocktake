@@ -28,9 +28,13 @@ $(function(){
         $.get('http://localhost:3000/api/bigstockphoto')
             .done(function (data) {
                 console.log('bigstockphoto', data);
-            });    
-          
-            
+            });   
+
+        $.get('http://localhost:3000/api/123rf')
+            .done(function (data) {
+                console.log('123rf', data);
+            });      
+
    });
 
 });
