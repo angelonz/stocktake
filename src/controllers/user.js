@@ -5,18 +5,22 @@ const cryptoUtil = require('../util/cryptoUtil');
 const _ = require('lodash');
 const uuidV4 = require('uuid/v4');
 const emitter = require('../util/eventManager').getEmitter();
+const moment = require('moment');
 
 const redisClient = db.getClient();
 
 function createUser({ email, password, secret }, token) {    
     
     // encrypt the password using the secret then save the json to redis
-    return redisClient.hmset(email, 
-        'password', cryptoUtil.encrypt(password, secret),
-        'secret', secret,
-        'verified', false,
-        'created', null,
-        'token', null);    
+    return redisClient.multi()
+        .hmset(email, 
+            'password', cryptoUtil.encrypt(password, secret),
+            'secret', cryptoUtil.encrypt(secret,process.env.SERVER_SECRET),
+            'verified', false,
+            'created', moment().format('MMMM Do YYYY, h:mm:ss a'),
+            'token', null)
+        .expire(email, 1800)
+        .exec();        
 
 }
 
@@ -54,7 +58,7 @@ function registrationHandler (req, res, next) {
                     // createUser returns a promise that we can inspect
                     createUser(req.body)
                         .then(function (reply) {                        
-                            if (reply === 'OK') {
+                            if (reply[0][1] === 'OK') {
                                 // make the token accessible by the next middleware
                                 res.locals.uuid = uuidV4();
                                 next();                                
@@ -143,8 +147,6 @@ emitter.on('emailSent', (email, token) => {
 
     console.log('emailSent event received.');
 
-    // expire in 10 minutes
-    redisClient.expire(email, 600);
     // set token value
     redisClient.hset(email, 'token', token);
 });

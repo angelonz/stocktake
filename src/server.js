@@ -22,6 +22,7 @@ db.connect();
 const siteController = require('./controllers/site');
 const userController = require('./controllers/user');
 const emailController = require('./controllers/email');
+const loginController = require('./controllers/login');
 
 const app = express();
 
@@ -66,6 +67,7 @@ app.post('/register', userController.register, emailController.sendVerificationE
  */
 app.get('/verify', userController.verify);
 
+app.post('/login', loginController.login);
 
 /**
  * Start Express server.

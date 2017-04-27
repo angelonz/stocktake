@@ -57,12 +57,9 @@ module.exports = {
         // send mail with defined transport object
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.log('Error sending verification email', error);
-                // end the middleware chain
-                res.status(HttpStatus.GATEWAY_TIMEOUT).send({
-                    status: HttpStatus.GATEWAY_TIMEOUT,
-                    error: 'Error sending verification email'
-                });
+                console.error('Error sending verification email', error);
+                res.end();
+                return;
             }
 
             console.log('Message %s sent: %s', info.messageId, info.response);
