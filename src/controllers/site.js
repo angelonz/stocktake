@@ -2,8 +2,6 @@ const _ = require('lodash');
 const StockTake = require('../stocktakeMaster2');
 var HttpStatus = require('http-status-codes');
 
-const NOT_FOUND = 404;
-
 module.exports = {
     getBalances: (request, response, next) => {
 
