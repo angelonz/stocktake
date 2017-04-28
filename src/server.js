@@ -12,6 +12,8 @@ const expressStatusMonitor = require('express-status-monitor');
 const lusca = require('lusca');
 const _ = require('lodash');
 const db = require('./util/db');
+const jwt = require('express-jwt');
+const HttpStatus = require('http-status-codes');
 
 // start the connection to redis
 db.connect();
@@ -51,6 +53,25 @@ app.use(session({
 
 //app.use(lusca.xframe('SAMEORIGIN'));
 //app.use(lusca.xssProtection(true));
+
+const unprotectedRoutes = ['/login','/register','/verify'];
+
+// intercept each request and verify the JWT token except for the unprotected routes
+app.use(jwt({
+  secret: process.env.JWT_SECRET
+}).unless({
+  path: unprotectedRoutes
+}));
+
+// general error handler for JWT issues
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    res.status(HttpStatus.UNAUTHORIZED).send({
+        status: HttpStatus.UNAUTHORIZED,
+        error: 'Invalid JWT token'
+    })
+  }  
+});
 
 /**
  * Route to handle individual site requests

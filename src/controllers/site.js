@@ -7,6 +7,8 @@ const NOT_FOUND = 404;
 module.exports = {
     getBalances: (request, response, next) => {
 
+        console.log('decoded payload', request.user);
+
         const stockTake = new StockTake(request.params.site);
         stockTake.getPool().start();
         stockTake.getBalances()
