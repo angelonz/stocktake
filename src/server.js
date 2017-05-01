@@ -51,8 +51,8 @@ app.use(session({
 }));
 */
 
-//app.use(lusca.xframe('SAMEORIGIN'));
-//app.use(lusca.xssProtection(true));
+app.use(lusca.xframe('SAMEORIGIN'));
+app.use(lusca.xssProtection(true));
 
 const unprotectedRoutes = ['/login','/register','/verify'];
 
@@ -73,10 +73,9 @@ app.use(function (err, req, res, next) {
   }  
 });
 
-/**
- * Route to handle individual site requests
- */
-app.get('/api/:site', siteController.getBalances);
+app.route('/api/:site')
+  .get(siteController.getBalance) /** Route to fetch balance of an individual site */
+  .post(siteController.saveSite); /** Route to handle saving of an individual site */
 
 /**
  * Route for user registration
@@ -88,6 +87,7 @@ app.post('/register', userController.register, emailController.sendVerificationE
  */
 app.get('/verify', userController.verify);
 
+/** Route for logging in */
 app.post('/login', loginController.login);
 
 /**
