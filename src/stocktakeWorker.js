@@ -7,41 +7,39 @@ var casper = require('../node_modules/casperjs/modules/casper').create(casperOpt
 
 module.exports = function(data, done, worker) {
 
-    if (data.siteName === 'fotolia') {
+    if (data.site === 'fotolia') {
         var fotolia = require('../sites/fotolia/fotolia');
-        fotolia.getBalance(casper, done, data.email);
+        fotolia.getBalance(casper, done, data.credentials);
     }
 
-    if (data.siteName === 'bigstockphoto') {
+    if (data.site === 'bigstockphoto') {
         var bsp = require('../sites/bigstockphoto/bigstockphoto');
-        bsp.getBalance(casper, done, data.email);
+        bsp.getBalance(casper, done, data.credentials);
     }
 
-    if (data.siteName === 'dreamstime') {
+    if (data.site === 'dreamstime') {
         var dt = require('../sites/dreamstime/dreamstime');
-        dt.getBalance(casper, done, data.email);
+        dt.getBalance(casper, done, data.credentials);
     }
 
-    if (data.siteName === 'gettyimages') {
+    if (data.site === 'gettyimages') {
         var dt = require('../sites/gettyimages/getty');
-        dt.getBalance(casper, done, data.email);
+        dt.getBalance(casper, done, data.credentials);
     }
 
-    if (data.siteName === 'snapwire') {
+    if (data.site === 'snapwire') {
         var dt = require('../sites/snapwire/snapwire');
-        dt.getBalance(casper, done, data.email);
+        dt.getBalance(casper, done, data.credentials);
     }
 
-    if (data.siteName === '123rf') {
+    if (data.site === '123rf') {
         var dt = require('../sites/123rf/123rf');
-        console.log('dt', JSON.stringify(dt));
-        dt.getBalance(casper, done, data.email);
+        dt.getBalance(casper, done, data.credentials);
     }
 
-    if (data.siteName === 'alamy') {
+    if (data.site === 'alamy') {
         var dt = require('../sites/alamy/alamy');
-        
-        dt.getBalance(casper, done, data.email);
+        dt.getBalance(casper, done, data.credentials);
     }
 
 };

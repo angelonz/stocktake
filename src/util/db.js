@@ -21,9 +21,7 @@ module.exports = {
         return redis;
     },
     getCredentialsForSite: (site, email) => {
-
         return redis.hgetall(`user:${email}:${site}`);
-
     }
   
 };

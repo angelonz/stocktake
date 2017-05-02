@@ -1,8 +1,5 @@
 var config = require('./config');
 var _ = require('lodash');
-var db = require('../../src/util/db');
-
-console.log('db', JSON.stringify(db));
 
 function processRequest (casper, done, credentials) {
 
@@ -79,30 +76,8 @@ function handleError(done) {
 }
 
 module.exports = {
-  getBalance: function (casper, done, email) {
-
-      console.log('email', email);  
-      var credentialsPromise = db.getCredentialsForSite('123rf', email);
-      credentialsPromise
-        .then(function (result) {
-
-            if (!_.isEmpty(result)) {
-                var credentials = { 
-                    username: result.username,
-                    password: result.password
-                 };
-
-                processRequest(casper, done, credentials);
-            } else {
-                handleError(done);
-            }
-
-        })
-        .catch(function () { 
-            handleError(done);
-        });
-
-      
+  getBalance: function (casper, done, credentials) {
+      processRequest(casper, done, credentials);
   }
 }
 

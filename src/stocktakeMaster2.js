@@ -9,10 +9,10 @@ const emitter = require('./util/eventManager').getEmitter();
  * @param {*} site  the stock photography website we're after
  * @param {*} email uniquely identifies the user
  */
-function Stocktake(site, email) {
+function Stocktake(options) {
 
-    this.email = email;
-    this.site = site;
+    this.options = options;
+
     this.result = {};
 
     var that = this;
@@ -21,20 +21,11 @@ function Stocktake(site, email) {
                 
         if (index < this.sites.length) { 
                         
-            let siteName = this.sites[index];
-            let jobData = {
-                siteName: siteName,
-                email: this.email
-            } 
-
-            job(jobData, (err, data) => {
-                
-                let siteNameToProcess = jobData.siteName;
+            job(this.options, (err, data) => {
                 
                 if (_.isNull(err) && data) {
-                    console.log('DONE: ' + siteNameToProcess + ':' + data.balance);
+                    console.log('DONE: ' + this.options.site + ':' + data.balance);
 
-                    //let value = data.balance;
                     let balance = data.balance;
 
                     // we could not fetch the balance
@@ -42,10 +33,9 @@ function Stocktake(site, email) {
                         balance = '-';
                     } 
                     
-                    that.result[siteNameToProcess] = balance;
+                    that.result[this.options.site] = balance;
                     // we can fire this here since we're only dealing with one site at a time
-                    // TODO - do we need to make this unique per user?
-                    emitter.emit(`${this.email}:${this.site}:complete`);
+                    emitter.emit(`${this.options.email}:${this.options.site}:complete`);
                 } 
                 
             });
@@ -57,7 +47,7 @@ function Stocktake(site, email) {
 
     };
 
-    this.sites = [site];
+    this.sites = [this.options.site];
 
     this.pool = new Pool({
         numWorkers : this.sites.length,        
@@ -85,8 +75,8 @@ Stocktake.prototype.getPool = function() {
 Stocktake.prototype.getBalances = function() {
     return new Promise((resolve, reject) => {
         
-        emitter.on(`${this.email}:${this.site}:complete`, () => {
-            console.log(`*** ${this.site} completed *****`);
+        emitter.on(`${this.options.email}:${this.options.site}:complete`, () => {
+            console.log(`*** ${this.options.site} completed *****`);
             if (this.allJobsFinished()) {
                 console.log('*** promise resolved *****');
                 resolve(this.result);
