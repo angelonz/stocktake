@@ -11,7 +11,7 @@ module.exports = {
 
         console.log('decoded payload', request.user);
 
-        const stockTake = new StockTake(request.params.site);
+        const stockTake = new StockTake(request.params.site, request.user.email);
         stockTake.getPool().start();
         stockTake.getBalances()
             .then((balances) => {

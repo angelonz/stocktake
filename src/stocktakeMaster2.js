@@ -3,8 +3,15 @@ const _ = require('lodash');
 const siteRegistrationUtil = require('./clientSiteRegistrationUtil');
 const emitter = require('./util/eventManager').getEmitter();
 
-function Stocktake(site) {
+/**
+ * The main master file that orchestrates the jobs
+ * 
+ * @param {*} site  the stock photography website we're after
+ * @param {*} email uniquely identifies the user
+ */
+function Stocktake(site, email) {
 
+    this.email = email;
     this.site = site;
     this.result = {};
 
@@ -15,11 +22,17 @@ function Stocktake(site) {
         if (index < this.sites.length) { 
                         
             let siteName = this.sites[index];
+            let jobData = {
+                siteName: siteName,
+                email: this.email
+            } 
 
-            job(siteName, (err, data) => {
+            job(jobData, (err, data) => {
+                
+                let siteNameToProcess = jobData.siteName;
                 
                 if (_.isNull(err) && data) {
-                    console.log('DONE: ' + siteName + ':' + data.balance);
+                    console.log('DONE: ' + siteNameToProcess + ':' + data.balance);
 
                     //let value = data.balance;
                     let balance = data.balance;
@@ -29,10 +42,10 @@ function Stocktake(site) {
                         balance = '-';
                     } 
                     
-                    that.result[siteName] = balance;
+                    that.result[siteNameToProcess] = balance;
                     // we can fire this here since we're only dealing with one site at a time
                     // TODO - do we need to make this unique per user?
-                    emitter.emit(`${this.site}Complete`);
+                    emitter.emit(`${this.email}:${this.site}:complete`);
                 } 
                 
             });
@@ -44,7 +57,6 @@ function Stocktake(site) {
 
     };
 
-    //this.sites = siteRegistrationUtil.getRegisteredSites();
     this.sites = [site];
 
     this.pool = new Pool({
@@ -73,7 +85,7 @@ Stocktake.prototype.getPool = function() {
 Stocktake.prototype.getBalances = function() {
     return new Promise((resolve, reject) => {
         
-        emitter.on(`${this.site}Complete`, () => {
+        emitter.on(`${this.email}:${this.site}:complete`, () => {
             console.log(`*** ${this.site} completed *****`);
             if (this.allJobsFinished()) {
                 console.log('*** promise resolved *****');

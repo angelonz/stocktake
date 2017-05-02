@@ -1,9 +1,12 @@
 var config = require('./config');
-const _ = require('lodash');
+var _ = require('lodash');
+var db = require('../../src/util/db');
 
-module.exports = {
-  getBalance: function (casper, done) {
-      casper.on('resource.requested', function(requestData, request) {
+console.log('db', JSON.stringify(db));
+
+function processRequest (casper, done, credentials) {
+
+    casper.on('resource.requested', function(requestData, request) {
         // List of URLs to skip. Entering part of a hostname or path is OK.
         var blackList = config.blacklist;
         var blackListLength = blackList.length;
@@ -28,8 +31,8 @@ module.exports = {
           this.echo('filling form...');
           
           var options = {};
-          options[config.login.username] = 'angelonz';
-          options[config.login.password] = 'L0n3w0lf';
+          options[config.login.username] = credentials.username; //'angelonz'
+          options[config.login.password] = credentials.password; //'L0n3w0lf'
 
           this.fillSelectors(config.login.form, options, true);
           this.echo('form submitted!');
@@ -63,6 +66,43 @@ module.exports = {
         //casper.done();
         done(null, body);
       });
+
+}
+
+// handles error scenarios by returning no balance (-)
+function handleError(done) {
+    var body = {
+        balance: '-'
+    };
+    
+    done(null, body);
+}
+
+module.exports = {
+  getBalance: function (casper, done, email) {
+
+      console.log('email', email);  
+      var credentialsPromise = db.getCredentialsForSite('123rf', email);
+      credentialsPromise
+        .then(function (result) {
+
+            if (!_.isEmpty(result)) {
+                var credentials = { 
+                    username: result.username,
+                    password: result.password
+                 };
+
+                processRequest(casper, done, credentials);
+            } else {
+                handleError(done);
+            }
+
+        })
+        .catch(function () { 
+            handleError(done);
+        });
+
+      
   }
 }
 
