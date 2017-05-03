@@ -28,8 +28,8 @@ function processRequest (casper, done, credentials) {
           this.echo('filling form...');
           
           var options = {};
-          options[config.login.username] = credentials.username; //'angelonz'
-          options[config.login.password] = credentials.password; //'L0n3w0lf'
+          options[config.login.username] = credentials.username;
+          options[config.login.password] = credentials.password;
 
           this.fillSelectors(config.login.form, options, true);
           this.echo('form submitted!');

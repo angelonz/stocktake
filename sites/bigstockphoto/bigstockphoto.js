@@ -27,8 +27,8 @@ module.exports = {
           this.echo('filling form...');
           
           var options = {};
-          options[config.login.username] = 'angelonz';
-          options[config.login.password] = 'lonewolf';
+          options[config.login.username] = credentials.username;
+          options[config.login.password] = credentials.password;
 
           this.fillSelectors(config.login.form, options, true);
           this.echo('form submitted!');

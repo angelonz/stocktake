@@ -1,7 +1,7 @@
 var config = require('./config');
 
 module.exports = {
-    getBalance: function (casper, done) {
+    getBalance: function (casper, done, credentials) {
 
         casper.on('resource.requested', function(requestData, request) {
 
@@ -33,8 +33,8 @@ module.exports = {
             this.echo('filling form...');
             
             var options = {};
-            options[config.login.username] = 'a_m_angeles@yahoo.com';
-            options[config.login.password] = 'l0n3w0lf';
+            options[config.login.username] = credentials.username;
+            options[config.login.password] = credentials.password;
             
             this.fillSelectors(config.login.form, options, false);
 
