@@ -25,7 +25,7 @@ function createUser({ email, password, secret }, token) {
 }
 
 function registrationHandler (req, res, next) {
-
+    console.log('registrationHandler', req.body);
     redisClient.hgetall(req.body.email, function (err, result) {
 
             if (!err) {
@@ -105,26 +105,38 @@ function verificationHandler (req, res, next) {
 
                 console.log(`${decodedMail} found.`);
                 // check that the token matches
-                redisClient.hget(decodedMail, 'token', (err, result) => {
-                    
-                    if (result === req.query.id) {
-                        // if it's a match, set verified to true
-                        redisClient.multi()
-                            .hmset(decodedMail, 'verified', true, 'token', null)
-                            .persist(decodedMail)
-                            .exec();
-
+                redisClient.hmget(decodedMail, 'verified','token', (err, result) => {
+                    console.log('result', result);
+                    // already verified
+                    if (result[0] === 'true') {
                         res.status(HttpStatus.OK).send({
                             status: HttpStatus.OK
                         });
-
                     } else {
-                        console.log('Token mismatch!');
-                        res.status(HttpStatus.BAD_REQUEST).send({
-                            status: HttpStatus.BAD_REQUEST,
-                            error: 'Token mismatch!'
-                        });
+                        
+                        if (result[1] === req.query.id) {
+                            // if it's a match, set verified to true
+                            redisClient.multi()
+                                .hmset(decodedMail, 'verified', true, 'token', null)
+                                .persist(decodedMail)
+                                .exec();
+
+                            res.status(HttpStatus.OK).send({
+                                status: HttpStatus.OK
+                            });
+
+                        } else {
+                            console.log('Token mismatch!');
+                            res.status(HttpStatus.BAD_REQUEST).send({
+                                status: HttpStatus.BAD_REQUEST,
+                                error: 'Token mismatch!'
+                            });
+                        }
+
+
                     }
+
+                    
                 });
                 
 
