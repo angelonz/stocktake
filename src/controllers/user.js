@@ -9,11 +9,12 @@ const moment = require('moment');
 
 const redisClient = db.getClient();
 
-function createUser({ email, password, secret }, token) {    
+function createUser({ email, password, secret, username }, token) {    
     
     // encrypt the password using the secret then save the json to redis
     return redisClient.multi()
         .hmset(email, 
+            'name', username,
             'password', cryptoUtil.encrypt(password, secret),
             'secret', cryptoUtil.encrypt(secret,process.env.SERVER_SECRET),
             'verified', false,
