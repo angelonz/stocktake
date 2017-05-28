@@ -9,12 +9,13 @@ const moment = require('moment');
 
 const redisClient = db.getClient();
 
-function createUser({ email, password, secret, username }, token) {    
+function createUser({ email, password, secret, firstName, lastName }, token) {    
     
     // encrypt the password using the secret then save the json to redis
     return redisClient.multi()
-        .hmset(email, 
-            'name', username,
+        .hmset(email.toLowerCase(), 
+            'firstName', firstName,
+            'lastName', lastName,
             'password', cryptoUtil.encrypt(password, secret),
             'secret', cryptoUtil.encrypt(secret,process.env.SERVER_SECRET),
             'verified', false,
@@ -27,7 +28,7 @@ function createUser({ email, password, secret, username }, token) {
 
 function registrationHandler (req, res, next) {
     console.log('registrationHandler', req.body);
-    redisClient.hgetall(req.body.email, function (err, result) {
+    redisClient.hgetall(req.body.email.toLowerCase(), function (err, result) {
 
             if (!err) {
 
@@ -39,7 +40,7 @@ function registrationHandler (req, res, next) {
                         console.log(message);
                         res.status(HttpStatus.CONFLICT).send({
                             status: HttpStatus.CONFLICT,
-                            error: message
+                            error: 'You have previously registered but have not verified your email yet.  Please check your email to activate your account.'
                         });
 
 
@@ -49,7 +50,7 @@ function registrationHandler (req, res, next) {
                         console.log(message);
                         res.status(HttpStatus.CONFLICT).send({
                             status: HttpStatus.CONFLICT,
-                            error: message
+                            error: 'You are already registered.  Please proceed to the login page.'
                         });
                     }
 
@@ -68,7 +69,7 @@ function registrationHandler (req, res, next) {
                                 console.log(message);   
                                 res.status(HttpStatus.BAD_REQUEST).send({
                                     status: HttpStatus.BAD_REQUEST,
-                                    error: message
+                                    error: 'Something has gone wrong in the registration process.  Please try again later.'
                                 });
                             }
                             
@@ -79,7 +80,7 @@ function registrationHandler (req, res, next) {
                 console.log(`Redis error on call to exists() for  ${req.body.email}`, err);
                 res.status(HttpStatus.BAD_REQUEST).send({
                     status: HttpStatus.BAD_REQUEST,
-                    error: `Failed to create user for ${req.body.email}`
+                    error: 'Something has gone wrong in the registration process.  Please try again later.'
                 });
             }
             
@@ -91,7 +92,7 @@ function verificationHandler (req, res, next) {
     if((`${req.protocol}://${req.get('host')}`) === (`http://${process.env.HOST}`)) {
 
         // convert the 'mail' query parameter back
-        const decodedMail = new Buffer(req.query.mail, 'base64').toString('ascii');
+        const decodedMail = new Buffer(req.query.mail, 'base64').toString('ascii').toLowerCase();
 
         // search for the decoded email in redis
         redisClient.exists(decodedMail, (err, result) => {

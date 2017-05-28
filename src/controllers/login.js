@@ -56,7 +56,7 @@ function authenticate({email, password}) {
 
     return new Promise((resolve, reject) => {
 
-        getUserRecord(email)
+        getUserRecord(email.toLowerCase())
             .then((result) => {
                 if (!_.isEmpty(result)) {
 
@@ -88,7 +88,7 @@ module.exports = {
         authenticate(req.body)
             .then((result) => {
                 console.log('user authenticated');
-                const jwt = generateJWT(req.body.email);
+                const jwt = generateJWT(req.body.email.toLowerCase());
                 console.log('jwt', jwt);
 
                 res.status(HttpStatus.OK).send({
