@@ -63,7 +63,7 @@ function authenticate({email, password}) {
                     // check if verified and password matches
                     //return (isVerified(result) && passwordMatches(result, password));
                     if (isVerified(result) && passwordMatches(result, password)) {
-                        resolve(true);
+                        resolve(result);
                     } else {
                         reject(false);
                     }
@@ -90,16 +90,19 @@ module.exports = {
                 console.log('user authenticated');
                 const jwt = generateJWT(req.body.email.toLowerCase());
                 console.log('jwt', jwt);
+                console.log(result);
 
                 res.status(HttpStatus.OK).send({
                     status: HttpStatus.OK,
-                    jwt: jwt
+                    jwt: jwt,
+                    firstName: result.firstName,
+                    lastName: result.lastName
                 });
             })
             .catch((err) => {
                 res.status(HttpStatus.UNAUTHORIZED).send({
                     status: HttpStatus.UNAUTHORIZED,
-                    error: 'Invalid credentials'
+                    error: 'Invalid credentials.'
                 });
             });
 
