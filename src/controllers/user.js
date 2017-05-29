@@ -162,7 +162,7 @@ emitter.on('emailSent', (email, token) => {
     console.log('emailSent event received.');
 
     // set token value
-    redisClient.hset(email, 'token', token);
+    redisClient.hset(email.toLowerCase(), 'token', token);
 });
 
 module.exports = {
