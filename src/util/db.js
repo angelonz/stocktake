@@ -70,18 +70,52 @@ function saveSiteHandler(site, email, username, password) {
 
             promise.then((result) => {
                 console.log('result', result);
-                // if all good, resolve the promise with no data to send
-                resolve();
+                // if all good, resolve the promise with the email
+                resolve(email);
             }).catch((error) => {
                 reject(error);
             });    
 
         });    
-    }
+    };
 
     return redis.hget(email, 'secret')
         .then(decryptSecret)
-        .then(save);
+        .then(save)
+        .then(getAllSitesForUser);
+}
+
+const getAllSitesForUser = (email) => {
+    return new Promise((resolve, reject) => {
+
+        redis.smembers(`user:${email}:sites`)
+            .then((result) => {
+
+                let sites = [];    
+                result.forEach((site) => {
+                    
+                    let content = {};
+
+                    redis.hget(site, 'username', (err, value) => {
+                        content.username = value;
+                        content.site = site.split(':')[2];
+                        console.log('adding site', content);
+                        sites.push(content);
+
+                        // there must be a better way!
+                        if (sites.length === result.length) {
+                            resolve(sites);
+                        }
+
+                    });
+
+                    
+                });
+
+
+            });
+
+    });
 }
 
 module.exports = {
@@ -97,6 +131,7 @@ module.exports = {
         return redis;
     },
     getCredentialsForSite: getCredentialsForSiteHandler,
-    saveSite: saveSiteHandler
+    saveSite: saveSiteHandler,
+    getAllSitesForUser
 
 };

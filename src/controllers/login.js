@@ -83,7 +83,7 @@ function authenticate({email, password}) {
 }
 
 module.exports = {
-    login: (req, res) => {
+    login: (req, res, next) => {
         
         authenticate(req.body)
             .then((result) => {
@@ -92,12 +92,21 @@ module.exports = {
                 console.log('jwt', jwt);
                 console.log(result);
 
+                res.locals.jwt = jwt;
+                res.locals.firstName = result.firstName,
+                res.locals.lastName = result.lastName
+
+                next();
+
+                /*
                 res.status(HttpStatus.OK).send({
                     status: HttpStatus.OK,
                     jwt: jwt,
                     firstName: result.firstName,
                     lastName: result.lastName
                 });
+                */
+                
             })
             .catch((err) => {
                 res.status(HttpStatus.UNAUTHORIZED).send({

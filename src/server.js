@@ -88,7 +88,7 @@ app.post('/register', userController.register, emailController.sendVerificationE
 app.get('/verify', userController.verify);
 
 /** Route for logging in */
-app.post('/login', loginController.login);
+app.post('/login', loginController.login, siteController.getAllSitesForUser);
 
 /**
  * Start Express server.

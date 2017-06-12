@@ -60,16 +60,35 @@ module.exports = {
         const email = request.user.email; // get the email from the JWT token
         const {username, password} = request.body;
 
+        // saves the site information and returns all the user's saved site upon successful creation
         db.saveSite(request.params.site, email, username, password)
-            .then(() => {
+            .then((sites) => {
                 response.status(HttpStatus.CREATED).send({
-                    status: HttpStatus.CREATED
+                    status: HttpStatus.CREATED,
+                    sites
                 });
             }).catch((error) => {
                 console.error(error);
                 handleError(HttpStatus.INTERNAL_SERVER_ERROR,
                     `An error occurred while saving ${request.params.site} for ${request.user.email}`,
                     response);
+            });
+
+    },
+    getAllSitesForUser: (request, response) => {
+        // if we're here, it means that the user already passed authentication
+        const email = request.body.email;
+        db.getAllSitesForUser(email)
+            .then((sites) => {
+
+                response.status(HttpStatus.OK).send({
+                    status: HttpStatus.OK,
+                    jwt: response.locals.jwt,
+                    firstName: response.locals.firstName,
+                    lastName: response.locals.lastName,
+                    sites
+                });
+
             });
 
     }
