@@ -35,6 +35,7 @@ function Stocktake(options) {
                     
                     that.result[this.options.site] = balance;
                     // we can fire this here since we're only dealing with one site at a time
+                    console.log('emitting event...');
                     emitter.emit(`${this.options.email}:${this.options.site}:complete`);
                 } 
                 
@@ -75,7 +76,7 @@ Stocktake.prototype.getPool = function() {
 Stocktake.prototype.getBalances = function() {
     return new Promise((resolve, reject) => {
         
-        emitter.on(`${this.options.email}:${this.options.site}:complete`, () => {
+        emitter.once(`${this.options.email}:${this.options.site}:complete`, () => {
             console.log(`*** ${this.options.site} completed *****`);
             if (this.allJobsFinished()) {
                 console.log('*** promise resolved *****');

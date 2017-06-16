@@ -1,7 +1,7 @@
 var config = require('./config');
 
 module.exports = {
-    getBalance: function (casper, done) {
+    getBalance: function (casper, done, credentials) {
 
         casper.on('resource.requested', function(requestData, request) {
             // List of URLs to skip. Entering part of a hostname or path is OK.
@@ -19,13 +19,13 @@ module.exports = {
             casper.start(config.login.url, function () {
                 if (this.exists(config.login.loginToggle)) {
                     this.echo('*** landing page loaded ***');
+                    
                     this.click(config.login.loginToggle);
                     
                 }
             });
 
             casper.then(function () {
-                this.capture(dreamstime.png);
                 this.echo('filling form...');
                 var options = {};
                 options[config.login.username] = credentials.username;
@@ -33,10 +33,12 @@ module.exports = {
         
                 this.fillSelectors(config.login.form, options, true);
                 this.echo('form submitted!');
+                
                                 
             });
 
             casper.waitFor(function check() {
+                
                 return this.exists(config.balance);
                 
             }, function then() {

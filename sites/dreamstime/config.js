@@ -4,7 +4,7 @@ var config = {
 		username: 'input#inp_user',
 		password: 'input#inp_pass',
 		form: 'form#loginfrm',
-		submit: '',
+		submit: 'form#loginfrm input[type="submit"]',
         loginToggle: 'a.signinlbl'
 	},
 	balance: 'div.dt-logout-popup a[href="https://www.dreamstime.com/earnings"]',

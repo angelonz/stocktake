@@ -1,7 +1,7 @@
 var config = require('./config');
 
 module.exports = {
-    getBalance: function (casper, done) {
+    getBalance: function (casper, done, credentials) {
 
         casper.on('resource.requested', function(requestData, request) {
 
