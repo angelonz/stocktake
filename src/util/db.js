@@ -91,6 +91,12 @@ const getAllSitesForUser = (email) => {
         redis.smembers(`user:${email}:sites`)
             .then((result) => {
 
+                console.log(result);
+                if (result.length === 0) {
+                    console.log(result.isEmpty);
+                    resolve([]);
+                }
+
                 let sites = [];    
                 result.forEach((site) => {
                     
@@ -104,6 +110,7 @@ const getAllSitesForUser = (email) => {
 
                         // there must be a better way!
                         if (sites.length === result.length) {
+                            console.log('resolving sites');
                             resolve(sites);
                         }
 

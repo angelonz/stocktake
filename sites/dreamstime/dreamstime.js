@@ -25,7 +25,7 @@ module.exports = {
             });
 
             casper.then(function () {
-                
+                this.capture(dreamstime.png);
                 this.echo('filling form...');
                 var options = {};
                 options[config.login.username] = credentials.username;
