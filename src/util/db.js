@@ -23,7 +23,7 @@ const decryptSecret = (encryptedSecret) => {
 };
 
 /** Handles fetching credentials for a particular site */
-function getCredentialsForSiteHandler (site, email) {
+function getCredentialsForSite (site, email) {
     
     const fetchCredentials = (secret) => {
         return new Promise((resolve, reject) => {
@@ -52,7 +52,7 @@ function getCredentialsForSiteHandler (site, email) {
 
 }
 
-function saveSiteHandler(site, email, username, password) {
+function saveSite(site, email, username, password) {
 
     const save = (secret) => {
         return new Promise((resolve, reject) => {
@@ -125,6 +125,33 @@ const getAllSitesForUser = (email) => {
     });
 }
 
+function createUser({ email, password, secret, firstName, lastName }, token) {    
+    
+    // encrypt the password using the secret then save the json to redis
+    return redis.multi()
+        .hmset(email.toLowerCase(), 
+            'firstName', firstName,
+            'lastName', lastName,
+            'password', cryptoUtil.encrypt(password, secret),
+            'secret', cryptoUtil.encrypt(secret,process.env.SERVER_SECRET),
+            'verified', false,
+            'created', moment().format('MMMM Do YYYY, h:mm:ss a'),
+            'token', null)
+        .expire(email, 1800)
+        .exec();        
+
+}
+
+function getAllUserDetails (email, cb) {
+    console.log(cb);
+    if (cb) {
+        redis.hgetall(email, cb);    
+    } else {
+        return redis.hgetall(email);
+    }
+      
+}
+
 module.exports = {
     
     connect : () => {
@@ -137,8 +164,29 @@ module.exports = {
     getClient: () => {
         return redis;
     },
-    getCredentialsForSite: getCredentialsForSiteHandler,
-    saveSite: saveSiteHandler,
-    getAllSitesForUser
+    getCredentialsForSite,
+    saveSite,
+    getAllSitesForUser,
+    createUser,
+    getAllUserDetails,
+    setEmailToken: (email, token)=> {
+        redis.hset(email, 'token', token);
+    },
+    exists: (decodedMail, cb) => {
+        redis.exists(decodedMail, (err, result) => {
+            cb(err, result);
+        });    
+    },
+    setUserVerifiedStatus: (decodedMail, verified) => {
+        redis.multi()
+            .hmset(decodedMail, 'verified', verified, 'token', null)
+            .persist(decodedMail)
+            .exec();
+    },
+    getVerifiedAndTokenValues: (decodedMail, cb) => {
+        redis.hmget(decodedMail, 'verified','token', (err, result) => {
+            cb(err, result);
+        });    
+    }
 
 };

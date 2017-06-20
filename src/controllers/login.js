@@ -4,8 +4,6 @@ const HttpStatus = require('http-status-codes');
 const cryptoUtil = require('../util/cryptoUtil');
 var jwt = require('jsonwebtoken');
 
-const redisClient = db.getClient();
-
 function isVerified(result) {
     console.log('user hasn\'t been verified yet.');
     return result.verified === 'true';
@@ -43,7 +41,7 @@ function generateJWT(email) {
  */
 function getUserRecord(email) {
     // check if the email exists
-    return redisClient.hgetall(email);
+    return db.getAllUserDetails(email);
 }
 
 /**

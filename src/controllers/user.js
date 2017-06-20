@@ -7,28 +7,9 @@ const uuidV4 = require('uuid/v4');
 const emitter = require('../util/eventManager').getEmitter();
 const moment = require('moment');
 
-const redisClient = db.getClient();
-
-function createUser({ email, password, secret, firstName, lastName }, token) {    
-    
-    // encrypt the password using the secret then save the json to redis
-    return redisClient.multi()
-        .hmset(email.toLowerCase(), 
-            'firstName', firstName,
-            'lastName', lastName,
-            'password', cryptoUtil.encrypt(password, secret),
-            'secret', cryptoUtil.encrypt(secret,process.env.SERVER_SECRET),
-            'verified', false,
-            'created', moment().format('MMMM Do YYYY, h:mm:ss a'),
-            'token', null)
-        .expire(email, 1800)
-        .exec();        
-
-}
-
 function registrationHandler (req, res, next) {
     console.log('registrationHandler', req.body);
-    redisClient.hgetall(req.body.email.toLowerCase(), function (err, result) {
+    db.getAllUserDetails(req.body.email.toLowerCase(), function (err, result) {
 
             if (!err) {
 
@@ -58,7 +39,7 @@ function registrationHandler (req, res, next) {
                 } else {
 
                     // createUser returns a promise that we can inspect
-                    createUser(req.body)
+                    db.createUser(req.body)
                         .then(function (reply) {                        
                             if (reply[0][1] === 'OK') {
                                 // make the token accessible by the next middleware
@@ -95,7 +76,7 @@ function verificationHandler (req, res, next) {
         const decodedMail = new Buffer(req.query.mail, 'base64').toString('ascii').toLowerCase();
 
         // search for the decoded email in redis
-        redisClient.exists(decodedMail, (err, result) => {
+        db.exists(decodedMail, (err, result) => {
             if (result === 0) { // email not found
                 console.log(`${decodedMail} not found.`);
                 res.status(HttpStatus.BAD_REQUEST).send({
@@ -107,7 +88,7 @@ function verificationHandler (req, res, next) {
 
                 console.log(`${decodedMail} found.`);
                 // check that the token matches
-                redisClient.hmget(decodedMail, 'verified','token', (err, result) => {
+                db.getVerifiedAndTokenValues(decodedMail, (err, result) => {
                     console.log('result', result);
                     // already verified
                     if (result[0] === 'true') {
@@ -118,10 +99,7 @@ function verificationHandler (req, res, next) {
                         
                         if (result[1] === req.query.id) {
                             // if it's a match, set verified to true
-                            redisClient.multi()
-                                .hmset(decodedMail, 'verified', true, 'token', null)
-                                .persist(decodedMail)
-                                .exec();
+                            db.setUserVerifiedStatus(decodedMail, true);
 
                             res.status(HttpStatus.OK).send({
                                 status: HttpStatus.OK
@@ -162,7 +140,7 @@ emitter.on('emailSent', (email, token) => {
     console.log('emailSent event received.');
 
     // set token value
-    redisClient.hset(email.toLowerCase(), 'token', token);
+    db.setEmailToken(email.toLowerCase(), 'token', token);
 });
 
 module.exports = {
